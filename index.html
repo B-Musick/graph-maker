@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Histogram</title>
+    <link rel="stylesheet" href="index.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.9.7/d3.min.js"></script>
+</head>
+<body>
+    <div id="title"></div>
+    <svg width="80%" height="70%">
+
+    </svg>
+    <div id="fileInput">
+        <input id='fileItem' type="file" accept=".csv">
+    </div>
+    <div id="dropdown-list-container" >
+        <select id="dropdown-list" required>
+            <option disabled selected value>--- Select Graph Type ---</option>
+            <option value="boxplot">Boxplot</option>
+            <option value="histogram">Histogram</option>
+            <option value="scatterplot">Scatter Plot</option>
+            <option value="bar-graph">Bar Graph</option>
+        </select>
+    </div>
+    <script src="index.js"></script>
+</body>
+</html>
