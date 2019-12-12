@@ -1,5 +1,6 @@
 /********************** FILE LOADING *************************/
 const inputElement = document.getElementById("fileItem");
+let plotDropdown = document.getElementById('dropdown-list');
 inputElement.addEventListener("change", (e) => {
 
     var file = document.getElementById('fileItem').files[0]; // Get the file input
@@ -9,9 +10,15 @@ inputElement.addEventListener("change", (e) => {
 
     reader.onloadend = function () {
         let split = reader.result.split('\n');
-        // Instantiate a new plot
-        let plot = new Plot(split);
-        plot.createPlot();
+
+        if(plotDropdown.value ==='boxplot'){
+            // Instantiate a new BOXPLOT
+            let plot = new Boxplot(split);
+            plot.createPlot();
+            plot.drawBoxPlot();
+        }
+
+        
     }
 });
 
@@ -48,19 +55,9 @@ class Plot{
         this.thirdQuartile;
         this.maxVal;
 
-        // Box
-        this.rectWidth = 80; // Width of the box plot rectangle
-        this.rectHeight;
-        this.rectX;
-        this.rectY;
-
-        // Horizontal bars
-        this.horLineLength = 40;
-        this.lineStroke = 2;
     }
 
     createPlot = () => {
-        console.log(this.file);
         // Remove all the data so when new file loaded it doesnt overlap
         // https://stackoverflow.com/questions/3674265/is-there-an-easy-way-to-clear-an-svg-elements-contents
         this.svg.selectAll("*").remove();
@@ -83,11 +80,14 @@ class Plot{
         this.setXAxis();
         this.setYAxis();
 
+        // Get values from the data
+        this.setMinVal();
+        this.setMaxVal();
+        this.setMedian();
         this.setFiveNumbers();
 
-        this.drawBoxPlot();
-        this.drawHorizontalLines();
-        this.drawVerticalLines();
+        
+
 
     }
 
@@ -103,14 +103,13 @@ class Plot{
         // Get the plot type chosen from the dropdown menu
         let plotDropdown = document.getElementById('dropdown-list');
         this.plotType = plotDropdown.value;
-        console.log(plotDropdown.value);
+       
     }
 
     getAxesTitles = () =>{
         // called in createPlot method
         // Remove the second values from the array which are the [x,y] values
         let axesTitles = this.file.shift().split(',');
-        console.log(axesTitles);
     }
 
 
@@ -123,19 +122,10 @@ class Plot{
     }
 
     setData=()=>{
+        /***** THIS METHOD CHANGES BASED ON GRAPH TYPE ******/
         let data = [];
 
-        if(this.plotType ==='boxplot'){
-            
-            // If boxplot, then x-axis is n (n=# of data points)
-            this.file.forEach((val) => {
-                if(val!=="") // Make sure actual values
-                // Push the data into the array([val1, val1]), turn them into arrays
-                data.push(parseInt(val));
-            });
-            this.dataset = data;
-  
-        }else if(this.plotType === 'categoryBarChart'){
+        if(this.plotType === 'categoryBarChart'){
             this.file.forEach((val) => {
                 // Push the data into the array([val1, val1]), turn them into arrays
                 data.push(val.split(','));
@@ -147,34 +137,14 @@ class Plot{
         }
     }
 
-    /***************************** SCALES  *************************************/
+    /***************************** SCALES  ************************************
+     * CHANGE DEPENDING ON TYPE OF PLOT
+    */
     
-    setXScale =()=>{
-        // Set the x scale for the graph
-        if(this.plotType === 'boxplot'){
-            // Arent using the x axis except to put in the middle
-            this.xScale = d3.scaleLinear()
-                .domain([0, this.innerWidth])
-                .range([0, this.innerWidth]);
-        }
-
-    } 
-
+    setXScale =()=>{} 
     
-    setYScale = ()=>{
-        // Set the y scale for the graph
-        if (this.plotType === 'boxplot') {
-            // Set the y scale to match the value of data for the box plot
-            this.yScale = d3.scaleLinear()
-                // Take the domain 'dates' and map them to the x-axis (method chaining)
-                .domain([0, d3.max(this.dataset)]) // 
-                .range([this.innerHeight, 0]); // Bottom of screen to top
-        }
-
-    }
+    setYScale = ()=>{}
    
-
-
     /*********** AXES COORDINATES  ************/
 
     setAxesContainer=()=>{
@@ -213,54 +183,149 @@ class Plot{
         // Holds value for the bar chart bars width
     }
 
+    setMinVal=()=>{
+        this.minVal = d3.min(this.dataset);
+    }
+
+    setMaxVal=()=>{
+        this.maxVal = d3.max(this.dataset);
+    }
+
+    setMedian=()=>{
+        let sortedData = this.dataset.sort();
+        let dataCount = sortedData.length;
+        let middleLength = Math.floor((dataCount / 2));
+        let middleVal = sortedData[middleLength];
+        let middleNextVal = sortedData[Math.floor(dataCount / 2)];
+
+        // If even then median is mean of two middle values
+        this.median = sortedData.length % 2 == 0 ? (Math.floor(middleVal + middleNextVal) / 2) : middleVal;
+    }
+
+
+    getMedian = (arr) => {
+        let arrSorted = arr.sort(function (a, b) { return a - b });
+        let arrLength = arr.length;
+        let halfLength = Math.floor(arrLength / 2);
+
+        // Return the median of an array
+        if (arrLength % 2 === 0) {
+            // If even amount of data then median is average of center values 
+            return (arrSorted[halfLength - 1] + arrSorted[halfLength]) / 2;
+        } else {
+            // If odd
+            return arrSorted[halfLength];
+        }
+    }
+    
     setFiveNumbers=()=>{
         let sortedData = this.dataset.sort();
-        console.log(sortedData);
-        let arrLength = sortedData.length;
-        let middleLength = Math.floor((arrLength / 2));
-        let middleVal = sortedData[middleLength];
-        let middleNextVal = sortedData[Math.floor(arrLength / 2)];
-        console.log((arrLength / 2) - 1);
+        let dataCount = sortedData.length;
+        let middleLength = Math.floor((dataCount / 2));
 
-        this.minVal = d3.min(sortedData);
+
+        
         this.firstQuartile =sortedData[Math.floor(middleLength/2)];
-        // If even then median is mean of two middle values
-        this.median = sortedData.length%2==0 ? (Math.floor(middleVal+middleNextVal)/2) : middleVal;
+
         this.thirdQuartile = sortedData[Math.floor((middleLength)+middleLength/2)];
-        this.maxVal = d3.max(sortedData);
+        
+    }
+}
 
-        console.log(this.minVal);
-        console.log(this.firstQuartile);
-        console.log(this.median);
-        console.log(this.thirdQuartile);
-        console.log(this.maxVal);
+class Boxplot extends Plot{
+    constructor(file){
+        super(file)
+        this.plotType = 'boxplot';
+
+        // Box
+        this.rectWidth = 80; // Width of the box plot rectangle
+        this.rectHeight;
+        this.rectX;
+        this.rectY;
+
+        // Horizontal bars
+        this.horLineLength = 40;
+        this.lineStroke = 2;
     }
 
-    drawTopRect=()=>{
-        let x = this.innerWidth/2 - this.rectWidth/2;
-        let rectX = x;
-        
-        // Have to subtract the higher value from lower since on screen in pixels goes top to bottom
-        let height = this.yScale(this.median) - this.yScale(this.thirdQuartile);
-        
-        // Draw to rectangle for the box plot spanning first to third quartile
-        this.axesContainer.append('rect')
-            .attr('x', x+"")
-            .attr('y', this.yScale(this.thirdQuartile)+"") // Y starts at the third quartile
-            .attr('height',height+"")
-            .attr('width',this.rectWidth+"")
-            .attr('fill','red')
-            .attr('stroke','black')
-            .attr('stroke-width', '2');
-            
+    setData = () => {
+        let data = [];
+
+        // If boxplot, then x-axis is n (n=# of data points)
+        this.file.forEach((val) => {
+            if (val !== "") // Make sure actual values
+                // Push the data into the array([val1, val1]), turn them into arrays
+                data.push(parseInt(val));
+        });
+        this.dataset = data.sort((function (a, b) { return a - b }));
     }
 
-    drawBottomRect=()=>{
+    setXScale = () => {
+        // Arent using the x axis except to put in the middle
+        this.xScale = d3.scaleLinear()
+            .domain([0, this.innerWidth])
+            .range([0, this.innerWidth]);
+    }
+
+    setYScale = () => {
+        // Set the y scale to match the value of data for the box plot
+        this.yScale = d3.scaleLinear()
+            // Take the domain 'dates' and map them to the x-axis (method chaining)
+            .domain([0, d3.max(this.dataset)]) // 
+            .range([this.innerHeight, 0]); // Bottom of screen to top  
+    }
+
+
+    setFiveNumbers = () => {
+        this.minVal = d3.min(this.dataset);
+        this.maxVal = d3.max(this.dataset);
+        this.median = this.getMedian(this.dataset);
+        let data = [...this.dataset]; // Make deep copy of array
+       
+        // Check if odd or even amount of data points
+        
+        if (data.length % 2 == 0) { 
+            // If dataset is even then divide data in two and get the median
+            let lowerHalf = data.splice(0,data.length/2);
+            let upperHalf = data;
+            this.firstQuartile = this.getMedian(lowerHalf);
+            this.thirdQuartile = this.getMedian(upperHalf);
+
+        }
+        else { 
+            // If data set is odd, remove the center value and  get median of both halves
+            let centerIndex = Math.floor(data.length/2);
+            let median = data.splice(centerIndex, 1);
+            let lowerHalf = data.splice(0,centerIndex);
+            let upperHalf = data;
+            this.firstQuartile = this.getMedian(lowerHalf);
+            this.thirdQuartile = this.getMedian(upperHalf);
+         };
+    }
+    drawTopRect = () => {
         let x = this.innerWidth / 2 - this.rectWidth / 2;
         let rectX = x;
 
-        let height = this.yScale(this.firstQuartile)-this.yScale(this.median);
-        console.log(height);
+        // Have to subtract the higher value from lower since on screen in pixels goes top to bottom
+        let height = this.yScale(this.median)-this.yScale(this.thirdQuartile);
+
+        // Draw to rectangle for the box plot spanning first to third quartile
+        this.axesContainer.append('rect')
+            .attr('x', x + "")
+            .attr('y', this.yScale(this.thirdQuartile) + "") // Y starts at the third quartile
+            .attr('height', height + "")
+            .attr('width', this.rectWidth + "")
+            .attr('fill', 'red')
+            .attr('stroke', 'black')
+            .attr('stroke-width', '2');
+    }
+
+    drawBottomRect = () => {
+        let x = this.innerWidth / 2 - this.rectWidth / 2;
+        let rectX = x;
+
+        let height = this.yScale(this.firstQuartile) - this.yScale(this.median);
+        
         // Draw to rectangle for the box plot spanning first to third quartile
         this.axesContainer.append('rect')
             .attr('x', x + "")
@@ -272,14 +337,14 @@ class Plot{
             .attr('stroke-width', '2');
     }
 
-    drawHorizontalLines=()=>{
+    drawHorizontalLines = () => {
         // Draw the top horizontal line
         this.axesContainer.append('line')
-            .attr('x1',this.innerWidth/2-this.horLineLength/2)
+            .attr('x1', this.innerWidth / 2 - this.horLineLength / 2)
             .attr('y1', this.yScale(this.maxVal))
             .attr('x2', this.innerWidth / 2 + this.horLineLength / 2)
             .attr('y2', this.yScale(this.maxVal))
-            .style('stroke-width',this.lineStroke)
+            .style('stroke-width', this.lineStroke)
             .style('stroke', 'black');
 
         // Draw the bottom horizontal line
@@ -292,7 +357,8 @@ class Plot{
             .style('stroke', 'black');
 
     }
-    drawVerticalLines=()=>{
+
+    drawVerticalLines = () => {
         // Draw the top line from max value to third quartile
         this.axesContainer.append('line')
             .attr('x1', this.innerWidth / 2)
@@ -311,11 +377,12 @@ class Plot{
             .style('stroke-width', this.lineStroke)
             .style('stroke', 'black');
     }
-    drawBoxPlot=()=>{
+
+    drawBoxPlot = () => {
+        /**** This is called to draw the complete graph *****/
         this.drawTopRect();
         this.drawBottomRect();
-
+        this.drawHorizontalLines();
+        this.drawVerticalLines();
     }
-
-    
 }
