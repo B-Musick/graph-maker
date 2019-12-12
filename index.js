@@ -55,6 +55,8 @@ class Plot{
         this.thirdQuartile;
         this.maxVal;
 
+        this.outliers = [];
+
     }
 
     createPlot = () => {
@@ -81,10 +83,13 @@ class Plot{
         this.setYAxis();
 
         // Get values from the data
-        this.setMinVal();
-        this.setMaxVal();
+        
+       
         this.setMedian();
         this.setFiveNumbers();
+        this.getIQR();
+        this.setMinVal();
+        this.setMaxVal();
 
         
 
@@ -183,13 +188,7 @@ class Plot{
         // Holds value for the bar chart bars width
     }
 
-    setMinVal=()=>{
-        this.minVal = d3.min(this.dataset);
-    }
 
-    setMaxVal=()=>{
-        this.maxVal = d3.max(this.dataset);
-    }
 
     setMedian=()=>{
         let sortedData = this.dataset.sort();
@@ -217,19 +216,64 @@ class Plot{
             return arrSorted[halfLength];
         }
     }
-    
+
+    getIQR=()=>{
+        // Get the interquartile range
+        let iqr = 1.5*(this.thirdQuartile - this.firstQuartile);
+        let lowerThan = this.firstQuartile - iqr;
+        let higherThan = this.thirdQuartile + iqr;
+        this.dataset.forEach(val=>{
+            // If the value falls outside the bounds, its an outlier
+            if(val<lowerThan || val>higherThan){
+                this.outliers.push(val);
+            }
+        });
+    }
+
+    setMinVal = () => {
+        let i = 0;
+        while (i < this.dataset.length){
+            if(this.outliers.includes(this.dataset[i])){
+                // If value is an outlier keep incrementing
+                i++;
+            }else{
+                // If not an outlier then set the minimum
+                this.minVal = this.dataset[i];
+                break;
+            }
+        }
+
+            
+        
+        
+    }
+
+    setMaxVal = () => {
+        let i = this.dataset.length-1;
+        while (i >=0) {
+            if (this.outliers.includes(this.dataset[i])) {
+                // If value is an outlier keep incrementing
+                i--;
+            } else {
+                // If not an outlier then set the minimum
+                this.maxVal = this.dataset[i];
+                break;
+            }
+        }
+        
+    }
+
     setFiveNumbers=()=>{
         let sortedData = this.dataset.sort();
         let dataCount = sortedData.length;
         let middleLength = Math.floor((dataCount / 2));
 
-
-        
         this.firstQuartile =sortedData[Math.floor(middleLength/2)];
 
         this.thirdQuartile = sortedData[Math.floor((middleLength)+middleLength/2)];
         
     }
+
 }
 
 class Boxplot extends Plot{
@@ -275,10 +319,9 @@ class Boxplot extends Plot{
             .range([this.innerHeight, 0]); // Bottom of screen to top  
     }
 
-
+    
     setFiveNumbers = () => {
-        this.minVal = d3.min(this.dataset);
-        this.maxVal = d3.max(this.dataset);
+ 
         this.median = this.getMedian(this.dataset);
         let data = [...this.dataset]; // Make deep copy of array
        
@@ -301,7 +344,11 @@ class Boxplot extends Plot{
             this.firstQuartile = this.getMedian(lowerHalf);
             this.thirdQuartile = this.getMedian(upperHalf);
          };
+
+
     }
+
+
     drawTopRect = () => {
         let x = this.innerWidth / 2 - this.rectWidth / 2;
         let rectX = x;
@@ -378,11 +425,29 @@ class Boxplot extends Plot{
             .style('stroke', 'black');
     }
 
+    drawOutliers=()=>{
+        let x = this.innerWidth / 2 - this.rectWidth / 8;
+
+        
+        this.outliers.forEach(val=>{
+            let height = 3;
+            this.axesContainer.append('rect')
+                .attr('x', x + "")
+                .attr('y', this.yScale(val) + "") // Y starts at the third quartile
+                .attr('height', height + "")
+                .attr('width', this.rectWidth/4 + "")
+                .attr('fill', 'black')
+                .attr('stroke', 'black')
+                .attr('stroke-width', '2');
+        })
+    }
+
     drawBoxPlot = () => {
         /**** This is called to draw the complete graph *****/
         this.drawTopRect();
         this.drawBottomRect();
         this.drawHorizontalLines();
         this.drawVerticalLines();
+        this.drawOutliers();
     }
 }
