@@ -23,9 +23,9 @@ class Plot{
         this.axesTitles;
         // dataset will be an array of arrays, the first value being the date, second the gdp
         this.dataset = [];
-        this.svgWidth; // Holds percentage integer
-        this.svgHeight; // Holds percentage integer
-        this.margin = { top: 2, right: 2, bottom: 2, left: 2 }; // This will be margin for axes starts from svg border
+        this.svgWidth = 960; // Holds percentage integer
+        this.svgHeight = 700; // Holds percentage integer
+        this.margin = { top: 60, right: 60, bottom: 60, left: 60 }; // This will be margin for axes starts from svg border
         this.innerWidth; // Used to make everything relative to axis
         this.innerHeight; // Used to make everything relative to axis
         this.plotType;
@@ -40,10 +40,23 @@ class Plot{
         // Hold the x and y axis scaled to values
         this.xAxis;
         this.yAxis;
-    
-        
 
+        /********* Five # summary for the box plots *********/
+        this.minVal;
+        this.firstQuartile;
+        this.median;
+        this.thirdQuartile;
+        this.maxVal;
 
+        // Box
+        this.rectWidth = 80; // Width of the box plot rectangle
+        this.rectHeight;
+        this.rectX;
+        this.rectY;
+
+        // Horizontal bars
+        this.horLineLength = 40;
+        this.lineStroke = 2;
     }
 
     createPlot = () => {
@@ -54,13 +67,13 @@ class Plot{
         this.setTitle(); // set the title
         this.getPlotType();
         this.getAxesTitles(); // Get the axes titles
-        this.getSVGSize();
+
         this.setMargins();
         this.setData();
        
         // Set scales
         this.setXScale();
-        this.setXScale();
+        this.setYScale();
 
         this.setAxesContainer();
 
@@ -70,8 +83,11 @@ class Plot{
         this.setXAxis();
         this.setYAxis();
 
+        this.setFiveNumbers();
 
-        this.setRect();
+        this.drawBoxPlot();
+        this.drawHorizontalLines();
+        this.drawVerticalLines();
 
     }
 
@@ -97,22 +113,6 @@ class Plot{
         console.log(axesTitles);
     }
 
-    getSVGSize=()=>{
-        // Get the percentage number of the width and height
-        // Called in this.createPlot()
-        
-        // Get the width and height in pixels
-        let width = this.svg.style('width');
-        let height = this.svg.style('height');
-
-        // Remove the 'px' from the values
-        let svgWid = parseInt(width.match(/\d/g).join(''));
-        let svgHgt = parseInt(height.match(/\d/g).join(''));
-
-        // Get the percentage of the width and height with comparison to screen
-        this.svgWidth = (svgWid / (window.innerWidth))*100;
-        this.svgHeight = (svgHgt / (window.innerWidth))*100;
-    }
 
     setMargins=()=>{
         // Use to style and set scales and axes (in %)
@@ -124,8 +124,7 @@ class Plot{
 
     setData=()=>{
         let data = [];
-        console.log(this.plotType);
-        console.log(this.file);
+
         if(this.plotType ==='boxplot'){
             
             // If boxplot, then x-axis is n (n=# of data points)
@@ -154,9 +153,9 @@ class Plot{
         // Set the x scale for the graph
         if(this.plotType === 'boxplot'){
             // Arent using the x axis except to put in the middle
-            this.xScale = d3.scaleBand()
-                .domain([0, innerWidth])
-                .range([0, innerWidth]);
+            this.xScale = d3.scaleLinear()
+                .domain([0, this.innerWidth])
+                .range([0, this.innerWidth]);
         }
 
     } 
@@ -186,18 +185,18 @@ class Plot{
 
     // Axis takes scale function, determine what values in scale correspond to what pixels
     prepareXAxis = () => {
-        this.xAxis = d3.axisLeft(this.yScale);
+        this.xAxis = d3.axisBottom(this.xScale);
     }
 
     prepareYAxis=()=>{
-        this.yAxis = d3.axisBottom(this.xScale);
+        this.yAxis = d3.axisLeft(this.yScale);
     }
 
     setXAxis=()=>{
         // X-AXIS
         this.axesContainer.append('g')
             // Define x,y coordinates translation from the left of screen and from top of screen 
-            .attr('transform', `translate(0,${this.innerWidth})`) // translate from svg edge to bottom of screen
+            .attr('transform', `translate(0,${this.innerHeight})`) // translate from svg edge to bottom of screen
             .call(this.xAxis) // Call function x-axis on elements of selection 'g'
             .attr('id', 'x-axis')
      
@@ -205,36 +204,118 @@ class Plot{
 
     setYAxis=()=>{
         // Y-Axis
-        this.setAxesContainer.append('g')
+        this.axesContainer.append('g')
             // Translate will define location of y-axis by defining (x,y) translation
             // If didnt add padding to x-coordinate, the y-axis is against the screen
-            .attr('transform', "translate(" +(margin.left) + ", 0)") // translate from svg left edge and y coordinate from top of screen
+            // .attr('transform', "translate(" +(this.margin.left) + ", 0)") // translate from svg left edge and y coordinate from top of screen
             .call(this.yAxis) // Call function x-axis on elements of selection 'g'
             .attr('id', 'y-axis');
         // Holds value for the bar chart bars width
     }
 
+    setFiveNumbers=()=>{
+        let sortedData = this.dataset.sort();
+        console.log(sortedData);
+        let arrLength = sortedData.length;
+        let middleLength = Math.floor((arrLength / 2));
+        let middleVal = sortedData[middleLength];
+        let middleNextVal = sortedData[Math.floor(arrLength / 2)];
+        console.log((arrLength / 2) - 1);
 
+        this.minVal = d3.min(sortedData);
+        this.firstQuartile =sortedData[Math.floor(middleLength/2)];
+        // If even then median is mean of two middle values
+        this.median = sortedData.length%2==0 ? (Math.floor(middleVal+middleNextVal)/2) : middleVal;
+        this.thirdQuartile = sortedData[Math.floor((middleLength)+middleLength/2)];
+        this.maxVal = d3.max(sortedData);
 
-    
-    
-
-
-
-
-
-
-        setRect=()=>{
-
-        // Use regex to get the size of the svg, returns array of all digits, join to number
-        this.svg.append('rect')
-            .attr('x', this.svgWidth/20 + "%")
-            .attr('y', '100')
-            .attr('width', this.svgWidth/20+"%")
-            .attr('height', 100)
-            .style('fill', 'black');
+        console.log(this.minVal);
+        console.log(this.firstQuartile);
+        console.log(this.median);
+        console.log(this.thirdQuartile);
+        console.log(this.maxVal);
     }
 
-    
+    drawTopRect=()=>{
+        let x = this.innerWidth/2 - this.rectWidth/2;
+        let rectX = x;
+        
+        // Have to subtract the higher value from lower since on screen in pixels goes top to bottom
+        let height = this.yScale(this.median) - this.yScale(this.thirdQuartile);
+        
+        // Draw to rectangle for the box plot spanning first to third quartile
+        this.axesContainer.append('rect')
+            .attr('x', x+"")
+            .attr('y', this.yScale(this.thirdQuartile)+"") // Y starts at the third quartile
+            .attr('height',height+"")
+            .attr('width',this.rectWidth+"")
+            .attr('fill','red')
+            .attr('stroke','black')
+            .attr('stroke-width', '2');
+            
+    }
+
+    drawBottomRect=()=>{
+        let x = this.innerWidth / 2 - this.rectWidth / 2;
+        let rectX = x;
+
+        let height = this.yScale(this.firstQuartile)-this.yScale(this.median);
+        console.log(height);
+        // Draw to rectangle for the box plot spanning first to third quartile
+        this.axesContainer.append('rect')
+            .attr('x', x + "")
+            .attr('y', this.yScale(this.median) + "") // Y starts at the third quartile
+            .attr('height', height + "")
+            .attr('width', this.rectWidth + "")
+            .attr('fill', 'red')
+            .attr('stroke', 'black')
+            .attr('stroke-width', '2');
+    }
+
+    drawHorizontalLines=()=>{
+        // Draw the top horizontal line
+        this.axesContainer.append('line')
+            .attr('x1',this.innerWidth/2-this.horLineLength/2)
+            .attr('y1', this.yScale(this.maxVal))
+            .attr('x2', this.innerWidth / 2 + this.horLineLength / 2)
+            .attr('y2', this.yScale(this.maxVal))
+            .style('stroke-width',this.lineStroke)
+            .style('stroke', 'black');
+
+        // Draw the bottom horizontal line
+        this.axesContainer.append('line')
+            .attr('x1', this.innerWidth / 2 - this.horLineLength / 2)
+            .attr('y1', this.yScale(this.minVal))
+            .attr('x2', this.innerWidth / 2 + this.horLineLength / 2)
+            .attr('y2', this.yScale(this.minVal))
+            .style('stroke-width', this.lineStroke)
+            .style('stroke', 'black');
+
+    }
+    drawVerticalLines=()=>{
+        // Draw the top line from max value to third quartile
+        this.axesContainer.append('line')
+            .attr('x1', this.innerWidth / 2)
+            .attr('y1', this.yScale(this.maxVal))
+            .attr('x2', this.innerWidth / 2)
+            .attr('y2', this.yScale(this.thirdQuartile))
+            .style('stroke-width', this.lineStroke)
+            .style('stroke', 'black');
+
+        // Draw the bottom line from max value to third quartile
+        this.axesContainer.append('line')
+            .attr('x1', this.innerWidth / 2)
+            .attr('y1', this.yScale(this.firstQuartile))
+            .attr('x2', this.innerWidth / 2)
+            .attr('y2', this.yScale(this.minVal))
+            .style('stroke-width', this.lineStroke)
+            .style('stroke', 'black');
+    }
+    drawBoxPlot=()=>{
+        this.drawTopRect();
+        this.drawBottomRect();
+
+    }
+
     
 }
