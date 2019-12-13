@@ -5,7 +5,10 @@ body{
     align-items: center;
     flex-direction: column;
 }
-
+#title{
+    height: 60px;
+    font-size: 25px;
+}
 #tooltip {
   visibility: hidden;
   position: absolute;
@@ -16,13 +19,18 @@ body{
   font: 10px Monaco;
   color: white;
   background:rgb(131, 173, 245);
-  border: 0px;
+  border: 2px solid black;
   border-radius: 4px;
   pointer-events: none;
   z-index: 1;
+ 
 }
 
 svg{
-    background-color: blue;
+    background-color: rgb(165, 212, 209);
     
+}
+.tick text{
+    font-weight: 600;
+    font-size: medium;
 }
