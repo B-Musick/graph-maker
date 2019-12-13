@@ -5,6 +5,23 @@ body{
     align-items: center;
     flex-direction: column;
 }
+
+#tooltip {
+  visibility: hidden;
+  position: absolute;
+  text-align: center;
+  width: 80px;
+  height: auto;
+  padding: 5px;
+  font: 10px Monaco;
+  color: white;
+  background:rgb(131, 173, 245);
+  border: 0px;
+  border-radius: 4px;
+  pointer-events: none;
+  z-index: 1;
+}
+
 svg{
     background-color: blue;
     

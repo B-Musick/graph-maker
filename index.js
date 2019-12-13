@@ -57,6 +57,12 @@ class Plot{
 
         this.outliers = [];
 
+        this.tooltip = d3.select('body')
+            .append("div")
+            .attr("id", "tooltip")
+            .style('visiblity', 'hidden');
+
+
     }
 
     createPlot = () => {
@@ -86,10 +92,12 @@ class Plot{
         
        
         this.setMedian();
+        
         this.setFiveNumbers();
         this.getIQR();
         this.setMinVal();
         this.setMaxVal();
+        
 
         
 
@@ -363,6 +371,8 @@ class Boxplot extends Plot{
             .attr('height', height + "")
             .attr('width', this.rectWidth + "")
             .attr('fill', 'red')
+            .attr('class', 'quartile-range')
+            .attr('id', 'upper-quartile') 
             .attr('stroke', 'black')
             .attr('stroke-width', '2');
     }
@@ -381,28 +391,43 @@ class Boxplot extends Plot{
             .attr('width', this.rectWidth + "")
             .attr('fill', 'red')
             .attr('stroke', 'black')
-            .attr('stroke-width', '2');
+            .attr('stroke-width', '2')
+            .attr('class', 'quartile-range')
+            .attr('id', 'lower-quartile') ;
     }
 
     drawHorizontalLines = () => {
         // Draw the top horizontal line
-        this.axesContainer.append('line')
-            .attr('x1', this.innerWidth / 2 - this.horLineLength / 2)
-            .attr('y1', this.yScale(this.maxVal))
-            .attr('x2', this.innerWidth / 2 + this.horLineLength / 2)
-            .attr('y2', this.yScale(this.maxVal))
-            .style('stroke-width', this.lineStroke)
-            .style('stroke', 'black');
+        this.axesContainer.append('rect')
+            .attr('width', this.horLineLength)
+            .attr('height', 6)
+            .attr('x', this.innerWidth / 2 - this.horLineLength / 2)
+            .attr('y', this.yScale(this.maxVal))
+            .attr('class', 'horizontal-bar')
+            .attr('id', 'max-horizontal-bar')
+ 
 
         // Draw the bottom horizontal line
-        this.axesContainer.append('line')
-            .attr('x1', this.innerWidth / 2 - this.horLineLength / 2)
-            .attr('y1', this.yScale(this.minVal))
-            .attr('x2', this.innerWidth / 2 + this.horLineLength / 2)
-            .attr('y2', this.yScale(this.minVal))
-            .style('stroke-width', this.lineStroke)
-            .style('stroke', 'black');
+        this.axesContainer.append('rect')
+            .attr('width', this.horLineLength)
+            .attr('height', 6)
+            .attr('x', this.innerWidth / 2 - this.horLineLength / 2)
+            .attr('y', this.yScale(this.minVal))
+            .attr('class','horizontal-bar')
+            .attr('id','min-horizontal-bar')
+      
 
+    }
+
+    drawMedian=()=>{
+        // Draw the bottom horizontal line
+        this.axesContainer.append('rect')
+            .attr('width', this.rectWidth)
+            .attr('height', 6)
+            .attr('x', this.innerWidth / 2 - this.rectWidth / 2)
+            .attr('y', this.yScale(this.median))
+            .attr('class', 'horizontal-bar')
+            .attr('id', 'median');
     }
 
     drawVerticalLines = () => {
@@ -438,7 +463,10 @@ class Boxplot extends Plot{
                 .attr('width', this.rectWidth/4 + "")
                 .attr('fill', 'black')
                 .attr('stroke', 'black')
-                .attr('stroke-width', '2');
+                .attr('value',val) // Used to access for the tooltip
+                .attr('stroke-width', '2')
+                .attr('class', 'outliers')
+                .attr('id', 'outlier'+val);;
         })
     }
 
@@ -449,5 +477,66 @@ class Boxplot extends Plot{
         this.drawHorizontalLines();
         this.drawVerticalLines();
         this.drawOutliers();
+        this.drawMedian();
+        this.quartileToolTips();
+        this.maxMinMedianToolTips();
+        this.drawOutliersTooltips();
     }
+
+    drawToolTips=(id,text)=>{
+
+        let rect=document.getElementById(id);
+        let tooltip = document.getElementById('tooltip');
+        
+        rect.addEventListener('mouseover',(e)=>{
+            tooltip.style.visibility = 'visible';
+            tooltip.textContent = text;
+            this.tooltip
+                .style('left',e.clientX+'px')
+                .style('top', e.clientY +'px');
+
+        });
+        rect.addEventListener('mouseout', (e) => {
+            tooltip.style.visibility = 'hidden';
+        });           
+    }
+
+    drawOutliersTooltips=()=>{
+
+        let outliers = document.querySelectorAll('.outliers');
+        let tooltip = document.getElementById('tooltip');
+
+        outliers.forEach(outlier=>{
+            // Loop through the outliers and print out tooltip if hovered
+            outlier.addEventListener('mouseover', (e) => {
+                tooltip.style.visibility = 'visible';
+                tooltip.textContent = 'This is an outlier at '+outlier.getAttribute('value');
+                this.tooltip
+                    .style('left', e.clientX + 'px')
+                    .style('top', e.clientY + 'px');
+
+            });
+            outlier.addEventListener('mouseout', (e) => {
+                tooltip.style.visibility = 'hidden';
+            }); 
+        })
+         
+
+    }
+    quartileToolTips=()=>{
+        this.drawToolTips('upper-quartile', 'Upper Quartile Range from Median(' + this.median + ') to Third Quartile(' + this.thirdQuartile + ")" );
+        this.drawToolTips('lower-quartile', 'Lower Quartile Range from Median(' + this.median + ') to First Quartile(' + this.firstQuartile + ")");
+    }
+
+    maxMinMedianToolTips=()=>{
+        this.drawToolTips('min-horizontal-bar', 'Minimum Value: '+this.minVal );
+        this.drawToolTips('max-horizontal-bar', 'Maximum Value: '+this.maxVal );
+        this.drawToolTips('median', 'Median: '+this.median );
+
+    }
+
+
+
+
+
 }
