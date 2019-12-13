@@ -8,7 +8,7 @@ class Plot {
         this.dataset = []; // Holds the data
         this.svgWidth = 960; // Holds percentage integer
         this.svgHeight = 700; // Holds percentage integer
-        this.margin = { top: 60, right: 60, bottom: 60, left: 60 }; // This will be margin for axes starts from svg border
+        this.margin = { top: 80, right: 80, bottom: 80, left: 80 }; // This will be margin for axes starts from svg border
         this.innerWidth; // Used to make everything relative to axis
         this.innerHeight; // Used to make everything relative to axis
         this.plotType; // Holds the plot type

@@ -19,6 +19,7 @@ inputElement.addEventListener("change", (e) => {
         }else if(plotDropdown.value ==='bar-graph'){
             let plot = new BarChart(split);
             plot.createPlot();
+            plot.drawBarChart();
         }
 
         
