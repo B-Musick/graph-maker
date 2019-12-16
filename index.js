@@ -20,6 +20,10 @@ inputElement.addEventListener("change", (e) => {
             let plot = new BarChart(split);
             plot.createPlot();
             plot.drawBarChart();
+        } else if (plotDropdown.value === 'histogram') {
+            let plot = new Histogram(split);
+            plot.createPlot();
+            plot.drawHistogram();
         }
 
         

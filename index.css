@@ -4,6 +4,7 @@ body{
     display: flex;
     align-items: center;
     flex-direction: column;
+    background-color: rgb(104, 183, 177);
 }
 #title{
     height: 60px;
@@ -33,4 +34,8 @@ svg{
 .tick text{
     font-weight: 600;
     font-size: medium;
+}
+
+#histogram-input{
+    visibility: hidden;
 }

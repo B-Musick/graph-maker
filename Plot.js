@@ -28,6 +28,8 @@ class Plot {
             .append("div")
             .attr("id", "tooltip")
             .style('visiblity', 'hidden');
+
+       
     }
 
     createPlot = () => {
@@ -41,7 +43,7 @@ class Plot {
         this.setMargins();
 
         this.setData();
-
+        
         // Set scales
         this.setXScale();
         this.setYScale();

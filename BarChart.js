@@ -39,7 +39,6 @@ class BarChart extends Plot{
             .range([this.innerHeight, 0]); // Left screen, right screen
     }
 
-
     /***************************** AXES **************************************/
 
     /************* AXIS LABELS *******************/
@@ -72,8 +71,8 @@ class BarChart extends Plot{
             .data(this.dataset)
             .enter() // Create thing that creates rectangle for each row of data
             .append('rect')
-                .attr('data-country', this.xValue + "") // Needs to match date on x-axis
-                .attr('data-gdp', this.yValue + "") // Needs to match gdp of y-axis
+                .attr('x-axis-category', this.xValue + "") // Needs to match date on x-axis
+                .attr('y-axis-value', this.yValue + "") // Needs to match gdp of y-axis
                 .attr('width', this.xScale.bandwidth() - 10 + "") // Width of bars using xScales band widths
                 .attr('height', d => this.innerHeight - this.yScale(this.yValue(d))) // Height is the height - yScale value
                 .attr('class', 'bar')
