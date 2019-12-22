@@ -1,6 +1,8 @@
 class BarChart extends Plot{
     constructor(file){
         super(file);
+        this.plotType = 'bar-graph';
+
         // Use these to prevent repetative data
         // Replace whole equation d=>d[0]
         // Replace part - d => xValue(d)

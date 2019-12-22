@@ -35,7 +35,7 @@ class Plot {
     createPlot = () => {
         // Remove all the data so when new file loaded it doesnt overlap
         // https://stackoverflow.com/questions/3674265/is-there-an-easy-way-to-clear-an-svg-elements-contents
-        this.svg.selectAll("*").remove();
+        this.removePreviousData();
         this.setTitle(); 
         this.getPlotType();
         this.getAxesTitles(); // Get the axes titles
@@ -55,6 +55,15 @@ class Plot {
 
         this.setXAxis();
         this.setYAxis();
+
+        
+    }
+
+    removePreviousData=()=>{
+        // Remove all the data so when new file loaded it doesnt overlap
+        // https://stackoverflow.com/questions/3674265/is-there-an-easy-way-to-clear-an-svg-elements-contents
+        this.svg.selectAll("*").remove();
+        
     }
 
     setTitle = () => {

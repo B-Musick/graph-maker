@@ -10,32 +10,63 @@
 </head>
 <body>
     <div id="title"></div>
-    <svg width="960" height="700"
-        viewBox="0 0 960 700"
-        preserveAspectRatio="xMidYMid">
-
-    </svg>
-    <div id="fileInput">
-        <input id='fileItem' type="file" accept=".csv">
+    <div id="graph-container">
+        <svg width="960" height="700" viewBox="0 0 960 700" preserveAspectRatio="xMidYMid">
+        
+        </svg>
+        <div id="inputs-container" class="inputs-container-set">
+            <div id="dropdown-list-container">
+                <select id="dropdown-list" required>
+                    <option disabled selected value>--- Select Graph Type ---</option>
+                    <option value="boxplot">Boxplot</option>
+                    <option value="histogram">Histogram</option>
+                    <option value="scatterplot">Scatter Plot</option>
+                    <option value="bar-graph">Bar Graph</option>
+                    <option value="normal">Normal</option>
+                    <option value="scatterplot">Scatterplot</option>
+                </select>
+                <input type="text" id="histogram-input" placeholder="Category #" required>
+                <div id="fileInput">
+                    <input id='fileItem' type="file" accept=".csv">
+                </div>
+            </div>
+            <div id="description-container">
+                <div>
+                    <h3>How to use</h3>
+        
+                    <p>- Create a CSV file with the data you have. CSV file should be formatted in the following way
+                        <ol>
+                            <li>Title of the graph</li>
+                            <li>x-axis label, y-axis label</li>
+                            <li>Then the rest of the rows should be the <u>x-value, y-value</u></li>
+                        </ol>
+                    </p>
+                    <img src="https://i.imgur.com/GFzqUb9.png" style="margin-left: 25%;">
+                    <p>- Select the graph type you want to make</p>
+                    <ul>
+                        <li>If histogram, input will pop up to define the amount of categories
+                            in x-axis you want defined.
+                        </li>
+                    </ul>
+                    <p>- Then use the file selector, input the file you made and let the program do the work.</p>
+                    <p>- When the graph is displayed on the screen, hover over the bars and it will display the
+                        value of that bar.
+                    </p>
+                </div>
+            </div>
+        </div>
     </div>
-    <div id="dropdown-list-container" >
-        <select id="dropdown-list" required>
-            <option disabled selected value>--- Select Graph Type ---</option>
-            <option value="boxplot">Boxplot</option>
-            <option value="histogram">Histogram</option>
-            <option value="scatterplot">Scatter Plot</option>
-            <option value="bar-graph">Bar Graph</option>
-        </select>
-        <input type="text" id="histogram-input" required>
-    </div>
 
-    
+
+
+
     <script src="Plot.js"></script>
-
     <script src="index.js"></script>
     <script src="Boxplot.js"></script>
     <script src="BarChart.js"></script>
     <script src="Histogram.js"></script>
+    <script src="NormalCurve.js"></script>
+    <script src="Scatterplot.js"></script>
 
 
 

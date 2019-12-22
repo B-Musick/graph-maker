@@ -24,6 +24,14 @@ inputElement.addEventListener("change", (e) => {
             let plot = new Histogram(split);
             plot.createPlot();
             plot.drawHistogram();
+        } else if (plotDropdown.value === 'normal') {
+            let plot = new NormalCurve(split);
+            plot.createPlot();
+            plot.drawNormal();
+        } else if (plotDropdown.value === 'scatterplot') {
+            let plot = new Scatterplot(split);
+            plot.createPlot();
+            // plot.drawNormal();
         }
 
         
@@ -31,4 +39,12 @@ inputElement.addEventListener("change", (e) => {
 });
 
 
+let inputsBox = document.getElementById('inputs-container');
+let svg = document.querySelector('svg');
 
+inputsBox.addEventListener('change',()=>{
+    if(inputElement.value && plotDropdown.value){
+        inputsBox.style.position = 'unset';
+        svg.style.visibility = 'visible';
+    }
+})
