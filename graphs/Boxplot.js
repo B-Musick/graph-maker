@@ -49,7 +49,9 @@ class Boxplot extends Plot {
             .domain([0, d3.max(this.dataset)]) // 
             .range([this.innerHeight, 0]); // Bottom of screen to top  
     }
-
+    setXAxisLabel=()=>{
+        // Dont need to set the x-axis label, it just shows how many values there are
+    }
     setYAxisLabel=()=>{
         this.svg.append("text")
             .attr("class", "y-label")
@@ -57,10 +59,11 @@ class Boxplot extends Plot {
 
             .attr("transform", "rotate(-90)")
             .attr("x", -this.innerHeight/1.9)
-            .attr("y", -this.margin.left/2)
+            .attr("y", this.margin.left/2)
             .style('font-size', this.innerWidth * 0.03 + "")
-            .text(`${this.axesTitles[0]}`);
+            .text(`${this.axesTitles[1]}`);
     }
+
     setMedian = () => {
         let sortedData = this.dataset.sort();
         let dataCount = sortedData.length;

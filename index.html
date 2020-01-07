@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Histogram</title>
-    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="src/stylesheets/index.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.9.7/d3.min.js"></script>
 </head>
 <body>
@@ -27,29 +27,57 @@
                 </select>
                 <input type="text" id="histogram-input" placeholder="Category #" required>
                 <div id="fileInput">
+                    <!-- Where file is selected, accepts only .csv files -->
                     <input id='fileItem' type="file" accept=".csv">
                 </div>
             </div>
             <div id="description-container">
                 <div>
                     <h3>How to use</h3>
-        
-                    <p>- Create a CSV file with the data you have. CSV file should be formatted in the following way
-                        <ol>
+                    <p>1) Select the type of graph you would like to make from the dropdown.</p>
+                    <li>If histogram, input will pop up to define the amount of categories
+                        in x-axis you want defined.
+                    </li>
+                    <p>2)  After choosing from the dropdown, the instructions for CSV file format will show below
+                        <ol id="bar-graph-instructions" class="hidden-instructions">
+                            <h4>Bar Graph</h4>
+                            <li>Title of the graph</li>
+                            <li>x-axis label, y-axis label</li>
+                            <li>Then the rest of the rows should be the <u>x-value (words/ categories), y-value</u></li>
+                            <img src="https://i.imgur.com/GFzqUb9.png">
+                        </ol>
+                        <ol id="normal-instructions" class="hidden-instructions">
+                            <h4>Normal Graph</h4>
+                            <li>Title of the graph</li>
+                            <li>x-axis label, y-axis label</li>
+                            <li>Then the rest of the rows should be the singular values in a column.</li>
+                            <img src="https://i.imgur.com/GpzFAMP.png" alt="">
+                        </ol>
+                        <ol id="scatterplot-instructions" class="hidden-instructions">
+                            <h4>Scatterplot</h4>
                             <li>Title of the graph</li>
                             <li>x-axis label, y-axis label</li>
                             <li>Then the rest of the rows should be the <u>x-value, y-value</u></li>
+                            <img src="https://i.imgur.com/HU0bkaE.png" alt="">
+                        </ol>
+                        <ol id="histogram-instructions" class="hidden-instructions">
+                            <h4>Histogram</h4>
+                            <li>Title of the graph</li>
+                            <li>x-axis label, y-axis label</li>
+                            <li>Then the rest of the rows should be the singular values in a column.</li>
+                            <img src="https://i.imgur.com/GpzFAMP.png" alt="">
+                        </ol>
+                        <ol id="boxplot-instructions" class="hidden-instructions">
+                            <h4>BoxPlot</h4>
+                            <li>Title of the graph</li>
+                            <li>x-axis label, y-axis label</li>
+                            <li>Then the rest of the rows should be the singular values in a column.</li>
+                            <img src="https://i.imgur.com/GpzFAMP.png" alt="">
                         </ol>
                     </p>
-                    <img src="https://i.imgur.com/GFzqUb9.png" style="margin-left: 25%;">
-                    <p>- Select the graph type you want to make</p>
-                    <ul>
-                        <li>If histogram, input will pop up to define the amount of categories
-                            in x-axis you want defined.
-                        </li>
-                    </ul>
-                    <p>- Then use the file selector, input the file you made and let the program do the work.</p>
-                    <p>- When the graph is displayed on the screen, hover over the bars and it will display the
+                    
+                    <p>3) Then use the file selector, input the file you made and let the program do the work.</p>
+                    <p>4) When the graph is displayed on the screen, hover over the bars and it will display the
                         value of that bar.
                     </p>
                 </div>
@@ -57,18 +85,12 @@
         </div>
     </div>
 
-
-
-
-    <script src="Plot.js"></script>
+    <script src="graphs/Plot.js"></script>
     <script src="index.js"></script>
-    <script src="Boxplot.js"></script>
-    <script src="BarChart.js"></script>
-    <script src="Histogram.js"></script>
-    <script src="NormalCurve.js"></script>
-    <script src="Scatterplot.js"></script>
-
-
-
+    <script src="graphs/Boxplot.js"></script>
+    <script src="graphs/BarChart.js"></script>
+    <script src="graphs/Histogram.js"></script>
+    <script src="graphs/NormalCurve.js"></script>
+    <script src="graphs/Scatterplot.js"></script>
 </body>
 </html>

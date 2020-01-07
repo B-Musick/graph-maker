@@ -1,15 +1,15 @@
 /********************** FILE LOADING *************************/
-const inputElement = document.getElementById("fileItem");
-let plotDropdown = document.getElementById('dropdown-list');
-inputElement.addEventListener("change", (e) => {
+const inputElement = document.getElementById("fileItem"); // File input
+let plotDropdown = document.getElementById('dropdown-list'); // Dropdown list
 
+inputElement.addEventListener("change", (e) => {
     var file = document.getElementById('fileItem').files[0]; // Get the file input
 
-    var reader = new FileReader();
-    reader.readAsText(file);
+    var reader = new FileReader(); // Read the file
+    reader.readAsText(file); // Read the file as text
 
     reader.onloadend = function () {
-        let split = reader.result.split('\n');
+        let split = reader.result.split('\n'); // Split into array
 
         if(plotDropdown.value ==='boxplot'){
             // Instantiate a new BOXPLOT
@@ -31,18 +31,21 @@ inputElement.addEventListener("change", (e) => {
         } else if (plotDropdown.value === 'scatterplot') {
             let plot = new Scatterplot(split);
             plot.createPlot();
-            // plot.drawNormal();
+            plot.drawScatterplot();
+            plot.calculations();
         }
-
-        
     }
 });
 
-
+/************** WHEN GRAPH AND FILE INPUT, SHOW THE GRAPH **********************/
 let inputsBox = document.getElementById('inputs-container');
 let svg = document.querySelector('svg');
 
 inputsBox.addEventListener('change',()=>{
+    if(plotDropdown.value){
+        let instructions = document.getElementById(plotDropdown.value+"-instructions");
+        instructions.classList.remove('hidden-instructions');
+    }
     if(inputElement.value && plotDropdown.value){
         inputsBox.style.position = 'unset';
         svg.style.visibility = 'visible';

@@ -4,7 +4,6 @@ class Histogram extends Plot{
         this.plotType = 'histogram';
         this.categoryAmount = document.getElementById('histogram-input').value;
         
-
         // Box
         this.rectHeight;
         this.rectX;
@@ -109,7 +108,7 @@ class Histogram extends Plot{
         this.svg.append("text")
             .attr("class", "y-label")
             .attr("text-anchor", "end")
-            .attr("y", -this.margin.left / 2)
+            .attr("y", this.margin.left / 2)
             .attr("x", -this.innerHeight / 1.9)
             .attr("dy", ".75em")
             .attr("transform", "rotate(-90)")

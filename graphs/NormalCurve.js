@@ -2,8 +2,6 @@ class NormalCurve extends Plot{
     constructor(file) {
         super(file)
         this.plotType = 'normal';
-        // this.categoryAmount = document.getElementById('histogram-input').value;
-
 
         // Box
         this.rectHeight;
@@ -15,7 +13,7 @@ class NormalCurve extends Plot{
         this.minVal;
 
         this.categories = []; // Set in setCategories
-        // this.barHeights = new Array(parseInt(this.categoryAmount));
+
         // Use these to prevent repetative data
         // Replace whole equation d=>d[0]
         // Replace part - d => xValue(d)
@@ -38,9 +36,6 @@ class NormalCurve extends Plot{
         this.dataset = data.sort((function (a, b) { return a - b }));
         this.maxVal = d3.max(data);
         this.minVal = d3.min(data);
-        
-        // this.setCategories();
-
     }
 
     /***************************** SCALES  *************************************/
@@ -50,6 +45,7 @@ class NormalCurve extends Plot{
             .domain([0,d3.max(this.dataset)])
             .range([0, this.innerWidth]);
     }
+
     setYScale = () => {
         // Set the xScale using date values, map the domain to the range to fit the page
         this.yScale = d3.scaleLinear()
@@ -83,9 +79,7 @@ class NormalCurve extends Plot{
             .attr("y", this.innerHeight + 2 * this.margin.bottom - 20)
             .style('font-size', this.innerHeight * 0.04 + "")
             .text(`${this.axesTitles[0]}`);
-        
     }
-
 
     /************************** COMPUTE DENSITY ****************************/
     kernelDensityEstimator = (kernel, X) => {
@@ -95,11 +89,13 @@ class NormalCurve extends Plot{
             });
         };
     }
+
     kernelEpanechnikov = (k) => {
         return function (v) {
             return Math.abs(v /= k) <= 1 ? 0.75 * (1 - v * v) / k : 0;
         };
     }
+    
     computeKernal=()=>{
         var kde = this.kernelDensityEstimator(this.kernelEpanechnikov(7), this.xScale.ticks(20));
         this.density = kde(this.dataset.map(function (d) { return d; }));

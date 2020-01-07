@@ -2,23 +2,11 @@ class BarChart extends Plot{
     constructor(file){
         super(file);
         this.plotType = 'bar-graph';
-
-        // Use these to prevent repetative data
-        // Replace whole equation d=>d[0]
-        // Replace part - d => xValue(d)
-        this.xValue = d=>d[0];
-        this.yValue = d=>d[1];
-
-
     }
+
     setData = () => {
         /***** THIS METHOD CHANGES BASED ON GRAPH TYPE ******/
-        let data = [];
-
-        this.file.forEach((val) => {
-            // Push the data into the array([val1, val1]), turn them into arrays
-            data.push(val.split(','));
-        })
+        let data = super.setData();
         // Parse the string values into integers
         this.dataset = data.map(arr => {
             return [arr[0], parseInt(arr[1])];
@@ -33,40 +21,7 @@ class BarChart extends Plot{
             .domain(this.dataset.map(data => data[0]))
             .range([0, this.innerWidth]);
     }
-    setYScale=()=>{
-        // Set the xScale using date values, map the domain to the range to fit the page
-        this.yScale = d3.scaleLinear()
-            // Take the domain 'dates' and map them to the x-axis (method chaining)
-            .domain([0, d3.max(this.dataset, d => d[1])]) // (first(earliest) date, last(latest) date)
-            .range([this.innerHeight, 0]); // Left screen, right screen
-    }
 
-    /***************************** AXES **************************************/
-
-    /************* AXIS LABELS *******************/
-
-    setYAxisLabel = () => {
-        this.svg.append("text")
-            .attr("class", "y-label")
-            .attr("text-anchor", "end")
-            .attr("y", -this.margin.left/2)
-            .attr("x", -this.innerHeight / 1.9)
-            .attr("dy", ".75em")
-            .attr("transform", "rotate(-90)")
-            .style('font-size', this.innerHeight * 0.04 + "")
-            .text(`${this.axesTitles[1]}`);
-  
-    }
-
-    setXAxisLabel=()=>{
-        this.svg.append("text")
-            .attr("class", "x-label")
-            .attr("text-anchor", "end")
-            .attr("x", this.innerWidth / 1.8)
-            .attr("y", this.innerHeight+2*this.margin.bottom-20)
-            .style('font-size', this.innerHeight * 0.04 + "")
-            .text(`${this.axesTitles[0]}`);
-    }
 
     drawBars=()=>{
         this.axesContainer.selectAll('rect') // Get the set of elements
@@ -111,10 +66,8 @@ class BarChart extends Plot{
     }
 
     drawBarChart = () => {
-        this.setXAxisLabel();
-        this.setYAxisLabel();
         this.drawBars();
-
+        
     }
 
 
