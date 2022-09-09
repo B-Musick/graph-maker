@@ -3,14 +3,27 @@ body{
     width: 100vw;
     font-family: Arial, sans-serif;
     font-size: 0.9em;
-    
-    background-color: rgb(104, 183, 177);
+    background-color: rgb(100, 130, 130);
 }
 #graph-container{
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
+}
+#inputs-container{
+    background: linear-gradient(#e66465, #9198e5);
+    color: rgb(50,50,50);
+    position: absolute;
+    margin-top: 20px;
+    background-color: lightgray;
+    padding: 20px;
+    border: 2px solid darkgray;
+    overflow: scroll;
+}
+#dropdown-list-container{
+    display:flex;
+
 }
 #title{
     text-align: center;
@@ -57,14 +70,17 @@ textarea:focus,
 button:focus {
     outline: none;
 }
-#inputs-container{
-    position: absolute;
-    margin-top: 20px;
-    background-color: lightgray;
-    padding: 20px;
-    border: 2px solid darkgray;
-    overflow: scroll;
+ol h4{
+    margin-left:-20px;
 }
+ol{
+    background-color:lightgray;
+}
+ol img{
+    max-width: 50%;
+    height:auto;
+}
+
 
 
 
