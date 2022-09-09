@@ -1,7 +1,8 @@
 body{
     height: 100vh;
     width: 100vw;
-
+    font-family: Arial, sans-serif;
+    font-size: 0.9em;
     
     background-color: rgb(104, 183, 177);
 }
@@ -30,8 +31,6 @@ body{
   border-radius: 4px;
   pointer-events: none;
   z-index: 1;
-  
- 
 }
 
 svg{

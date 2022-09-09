@@ -86,7 +86,7 @@ class Plot {
         // Remove all the data so when new file loaded it doesnt overlap
         // https://stackoverflow.com/questions/3674265/is-there-an-easy-way-to-clear-an-svg-elements-contents
         this.svg.selectAll("*").remove();
-        
+        // d3.select(svg).selectAll("*").remove();
     }
 
     setTitle = () => {
@@ -95,6 +95,11 @@ class Plot {
 
         // Remove the first value from the array which is the title
         this.title.textContent = this.file.shift();
+    }
+
+    removeTitle = () =>{
+        // Remove title when switching graph types
+        this.title.textContent = "";
     }
 
     getPlotType = () => {
@@ -262,5 +267,38 @@ class Plot {
         // Used to calculate z score (standardize the distance from mean into units
         // of standard deviations)
         return (x-mean)/stdDev;
+    }
+
+    /*********************** TOOLTIP METHODS *******************************
+     * BarChart.js
+     * Histogram.js
+    */
+    tooltipMouseout=()=>{
+        return function(){
+            // When mouse stops hovering a specific bar
+            d3.select(this)
+                .transition()
+                .duration(400)
+                .style("fill", "#3a5ada");
+
+            d3.select('#tooltip')
+                .style("visibility", "hidden")
+                .style("opacity", 0);
+        }
+    }
+
+    tooltipMouseover=()=>{
+        return function (d) {
+            let x = d3.mouse(this)[0];
+            let y = d3.mouse(this)[1];
+
+            d3.select(this).style("fill", "#a8eddf");
+            d3.select('#tooltip').style("visibility", "visible")
+                .style('opacity', 1)
+                .html(d[0] + " - " + d[1])
+                .style('left', (x + 150) + 'px')
+                .style('top', y + 'px')
+                .style('width', 'auto');
+        }
     }
 }

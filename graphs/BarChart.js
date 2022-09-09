@@ -40,38 +40,14 @@ class BarChart extends Plot{
 
                 .style('fill', '#4aa89c')
                 .style('margin', '2')
-                .on("mouseout", function () {
-                    // When mouse stops hovering a specific bar
-                    d3.select(this)
-                        .transition()
-                        .duration(400)
-                        .style("fill", "#4aa89c");
-                   
-                    d3.select('#tooltip')
-                        .style("visibility", "hidden")
-                        .style("opacity", 0);
-                })
-                .on("mouseover", function (d) {
-                    let x = d3.mouse(this)[0];
-                    let y = d3.mouse(this)[1];
-
-                    
-                    d3.select(this).style("fill", "a8eddf");
-                    d3.select('#tooltip').style("visibility", "visible")
-                        .style('opacity', 1)
-                        .html(d[0] + " - " + d[1] )
-                            .style('left', (x+150)+ 'px')
-                            .style('top', y+ 'px');
-                });;
+                .on("mouseout", this.tooltipMouseout())
+                .on("mouseover", this.tooltipMouseover());
     }
 
     drawBarChart = () => {
         this.drawBars();
         
     }
-
-
-
 }
 
 
