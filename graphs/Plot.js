@@ -202,7 +202,7 @@ class Plot {
         this.svg.append("text")
             .attr("class", "x-label")
             .attr("text-anchor", "end")
-            .attr("x", this.innerWidth / 1.8)
+            .attr("x", this.innerWidth / 1.7)
             .attr("y", this.innerHeight + 2 * this.margin.bottom - 20)
             .style('font-size', this.innerHeight * 0.04 + "")
             .text(`${this.axesTitles[0]}`);
@@ -292,7 +292,7 @@ class Plot {
             let x = d3.mouse(this)[0];
             let y = d3.mouse(this)[1];
 
-            d3.select(this).style("fill", "#a8eddf");
+            d3.select(this).style("fill", '#1b8ada');
             d3.select('#tooltip').style("visibility", "visible")
                 .style('opacity', 1)
                 .html(d[0] + " - " + d[1])

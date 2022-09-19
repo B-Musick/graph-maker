@@ -3,6 +3,11 @@ const inputElement = document.getElementById("fileItem"); // File input
 let plotDropdown = document.getElementById('dropdown-list'); // Dropdown list
 let plot; // Want to be able to access plot globally
 
+// plotDropdown.addEventListener("change",(e)=>{
+//     console.log("changed");
+    
+// });
+
 inputElement.addEventListener("change", (e) => {
     var file = document.getElementById('fileItem').files[0]; // Get the file input
 
@@ -13,30 +18,7 @@ inputElement.addEventListener("change", (e) => {
         // Once the file is loaded, then interpret the file
         let split = reader.result.split('\n'); // Split into array
 
-        // Depending on which dropdown is selected, create the associated plot
-        if(plotDropdown.value ==='boxplot'){
-            // Instantiate a new BOXPLOT
-            plot = new Boxplot(split);
-            plot.createPlot();
-            plot.drawBoxPlot();
-        }else if(plotDropdown.value ==='bar-graph'){
-            plot = new BarChart(split);
-            plot.createPlot();
-            plot.drawBarChart();
-        } else if (plotDropdown.value === 'histogram') {
-            plot = new Histogram(split);
-            plot.createPlot();
-            plot.drawHistogram();
-        } else if (plotDropdown.value === 'normal') {
-            plot = new NormalCurve(split);
-            plot.createPlot();
-            plot.drawNormal();
-        } else if (plotDropdown.value === 'scatterplot') {
-            plot = new Scatterplot(split);
-            plot.createPlot();
-            plot.drawScatterplot();
-            plot.calculations();
-        }
+        choosePlot(split);
     }
 });
 
@@ -77,6 +59,32 @@ inputsBox.addEventListener('change',()=>{
     }
 })
 
+let choosePlot=(split)=>{
+        // Depending on which dropdown is selected, create the associated plot
+    if(plotDropdown.value ==='boxplot'){
+        // Instantiate a new BOXPLOT
+        plot = new Boxplot(split);
+        plot.createPlot();
+        plot.drawBoxPlot();
+    }else if(plotDropdown.value ==='bar-graph'){
+        plot = new BarChart(split);
+        plot.createPlot();
+        plot.drawBarChart();
+    } else if (plotDropdown.value === 'histogram') {
+        plot = new Histogram(split);
+        plot.createPlot();
+        plot.drawHistogram();
+    } else if (plotDropdown.value === 'normal') {
+        plot = new NormalCurve(split);
+        plot.createPlot();
+        plot.drawNormal();
+    } else if (plotDropdown.value === 'scatterplot') {
+        plot = new Scatterplot(split);
+        plot.createPlot();
+        plot.drawScatterplot();
+        plot.calculations();
+    }
+}
 let removeCurrentInstructions = ()=>{
     let changedToNewInstructions = false;
 

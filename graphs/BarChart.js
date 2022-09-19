@@ -38,7 +38,7 @@ class BarChart extends Plot{
                 // Need to subtract the yScaled value from height since scaled it this way
                 .attr('y', d => (this.yScale(this.yValue(d))) + "") // Makes sure bars arent above x-axis
 
-                .style('fill', '#4aa89c')
+                .style('fill', '#3a5ada')
                 .style('margin', '2')
                 .on("mouseout", this.tooltipMouseout())
                 .on("mouseover", this.tooltipMouseover());

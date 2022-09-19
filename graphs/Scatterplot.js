@@ -16,7 +16,7 @@ class Scatterplot extends Plot{
     // Map (parsedDataset[0] to the x axis starting at padding, ending width-padding)
     setXScale = () => {
         this.xScale = d3.scaleLinear()
-            .domain([0, d3.max(this.dataset, d => d[0])])
+            .domain([d3.min(this.dataset,d=>d[0])-1, d3.max(this.dataset, d => d[0])])
             .range([0, this.innerWidth]);
     }
 
