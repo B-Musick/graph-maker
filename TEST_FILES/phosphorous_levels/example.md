@@ -3,7 +3,7 @@
 the Lake Winnipeg Foundation. I created a .csv file (<a href="https://github.com/B-Musick/graph-maker/blob/master/TEST_FILES/phosphorous_levels/scatterplot.csv">link</a>) using data similiar to that which might be
 found on the LWF DataStream website, used for monitoring phosphorous levels over the season.
 
-![](./images/phos_graph.png "Phosphorous leves vs. month")
+![](./images/phosphorous_graph.png "Phosphorous leves vs. month")
 
 - You can see in the image on the rightmost point that when I hover over the point, 
 it highlights it and shows the associated data with that point.
@@ -24,7 +24,7 @@ file to input
 ## 3. Upload formatted .csv file and submit
 - Once the file is uploaded, it will output the graph
 
-![](./images/phos_graph.png "Phosphorous leves vs. month")
+![](./images/phosphorous_graph.png "Phosphorous leves vs. month")
 
 # Sources
 - Lake Winnipeg Foundation: https://lakewinnipegfoundation.org/ 
