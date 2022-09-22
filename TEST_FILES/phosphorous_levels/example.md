@@ -1,8 +1,12 @@
 # Phosphorous Level vs. Month Example
-- This is an example output of my data visualization tool using data similiar to that 
-which may be collected for phosphorous levels over the season.
+- This is an example output of my data visualization tool for my application to 
+the Lake Winnipeg Foundation. I created a .csv file using data similiar to that which might be
+found on the LWF DataStream website, used for monitoring phosphorous levels over the season.
 
-![](./images/graph.png "Phosphorous leves vs. month")
+![](./images/phos_graph.png "Phosphorous leves vs. month")
+
+- You can see in the image on the rightmost point that when I hover over the point, 
+it highlights it and shows the associated data with that point.
 
 # Steps Involved in creating:
 
@@ -20,4 +24,8 @@ file to input
 ## 3. Upload formatted .csv file and submit
 - Once the file is uploaded, it will output the graph
 
-![](./images/graph.png "Phosphorous leves vs. month")
+![](./images/phos_graph.png "Phosphorous leves vs. month")
+
+# Sources
+- Lake Winnipeg Foundation: https://lakewinnipegfoundation.org/ 
+- DataStream: https://lakewinnipegdatastream.ca/
