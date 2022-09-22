@@ -1,6 +1,6 @@
 # Phosphorous Level vs. Month Example
 - This is an example output of my data visualization tool for my application to 
-the Lake Winnipeg Foundation. I created a .csv file using data similiar to that which might be
+the Lake Winnipeg Foundation. I created a .csv file (<a href="https://github.com/B-Musick/graph-maker/blob/master/TEST_FILES/phosphorous_levels/scatterplot.csv">link</a>) using data similiar to that which might be
 found on the LWF DataStream website, used for monitoring phosphorous levels over the season.
 
 ![](./images/phos_graph.png "Phosphorous leves vs. month")
