@@ -56,6 +56,7 @@ inputsBox.addEventListener('change',()=>{
         // If file is input, then interpret it and show the associated graph
         inputsBox.style.position = 'unset';
         svg.style.visibility = 'visible';
+        console.log(plotDropdown.value);
     }
 })
 
